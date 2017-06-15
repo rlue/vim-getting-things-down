@@ -20,7 +20,7 @@ endif
 nnoremap <LocalLeader><LocalLeader> :call getting_things_down#show_todo()<CR>
 
 " Quick-switch between current file and `TODO.md` of project root
-nnoremap <LocalLeader>m :call getting_things_down#cycle_status()<CR>
+nnoremap <silent> <LocalLeader>c :call getting_things_down#cycle_status()<CR>
 
 " Public functions =============================================================
 
