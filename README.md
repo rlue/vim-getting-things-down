@@ -126,6 +126,8 @@ _Getting Things Down_ attempts to find the project-wide TODO file by walking up 
 Configuration
 -------------
 
+### Variables
+
 To change the default behavior of _Getting Things Down_, modify the lines below and add them to your `.vimrc`. (For booleans, `0` is falsy; any other number is truthy.)
 
 ```viml
@@ -134,6 +136,30 @@ let g:gtdown_default_fold_level = 2                    " Sets the default fold l
 let g:gtdown_fold_lists = 1                            " Should lists be folded too, or only headings?
 let g:gtdown_show_progress = 1                         " Display progress bar for folded headings/list items?
 ```
+
+A buffer-local `b:gtdown_show_progress` value will override the global setting. For instance, the following autocommand will enable progress previews _only_ for files named `TODO.md`:
+
+```viml
+let g:gtdown_show_progress = 0
+augroup gtDown
+  autocmd!
+  autocmd BufReadPre TODO.md let b:gtdown_show_progress = 1
+augroup END
+```
+
+### Mappings
+
+The lines below set mappings for _Getting Things Down’s_ major shortcuts.
+
+```viml
+" Quick-switch between current file and `TODO.md` of project root
+nnoremap <LocalLeader><LocalLeader> :call getting_things_down#show_todo()<CR>
+
+" Cycle through TODO keywords
+nnoremap <silent> <LocalLeader>c :call getting_things_down#cycle_status()<CR>
+```
+
+I use `<Leader><Leader>` and `<Leader>c`, but it’d probably clobber someone else’s settings if those were the default.
 
 License
 -------
