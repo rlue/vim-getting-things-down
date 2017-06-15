@@ -55,12 +55,14 @@ function! getting_things_down#show_todo()
 endfunction
 
 function! getting_things_down#cycle_status()
+  let l:curpos = getcurpos()
   let l:status = matchstr(getline('.'), '\v(^#{1,6}\s*|^\s*([\*\+\-]|\d\+\.)\s+)@<=(' . join(g:gtdown_cycle_states, '|') .')')
   for i in range(0, len(g:gtdown_cycle_states) - 1)
     if l:status ==# get(g:gtdown_cycle_states, i)
       execute line('.') . 'substitute/' . get(g:gtdown_cycle_states, i) . '/' . get(g:gtdown_cycle_states, ((i + 1) % 3))
     endif
   endfor
+  call setpos('.', l:curpos)
 endfunction
 
 " for folding ------------------------------------------------------------------
