@@ -82,7 +82,9 @@ can be collapsed like so:
 |     ...
 ```
 
-or, one level further, like so:
+Note how the collapsed “Food & Drink” and “Equipment” settings display a progress bar on the right. This is automatically generated according to what portion of the tasks within the fold are marked DONE. Note also that the “HELP Hire a DJ” column does not display a status bar. Since there are no tasks inside of that fold, it reports the number of non-blank lines, instead.
+
+As you continue to collapse the folds, the progress bars readjust to reflect the overall progress of all tasks they contain:
 
 ```markdown
 -     Jake’s Bar Mitzvah
@@ -96,8 +98,6 @@ or, one level further, like so:
 |     ================================================================================
 |     ...
 ```
-
-When there are no tasks within a subtree, the fold text displays the number of non-blank lines inside the fold. 
 
 If you’re not familiar with folding, check out the help docs:
 
