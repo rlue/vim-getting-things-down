@@ -139,7 +139,7 @@ function! s:end_of_hsubtree(lnum)
   " GUARD CLAUSE: Return false if no containing header
   if !s:parent_heading_level(a:lnum)
     return 0
-  elseif getline(a:lnum) !~# '\S' && s:heading_level(a:lnum + 1)
+  elseif getline(a:lnum) !~# '\S' && (s:heading_level(a:lnum + 1) || s:next_nonblank_line(a:lnum) == -1)
     return s:heading_level(a:lnum + 1) <= s:parent_heading_level(a:lnum)
   end
 endfunction
