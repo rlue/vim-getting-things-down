@@ -1,6 +1,8 @@
 Getting Things Down
 ===================
 
+![](https://raw.githubusercontent.com/rlue/i/master/vim-getting-things-down/demo.gif)
+
 Get Things Done in plain ol’ Markdown.
 
 _Getting Things Down_ provides smart folding and TODO keyword highlighting for Markdown files, taking advantage of the heading outline structure inherent to Markdown (via HTML). Collapse/expand headings and list items, view overall progress, and jump to your project’s TODO file with a single mapping.
