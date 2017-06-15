@@ -112,6 +112,9 @@ function! s:heading_level(lnum)
   " GUARD CLAUSE: Return false if prev line is not a block boundary
   if !s:block_boundary(a:lnum - 1)
     return 0
+  " GUARD CLAUSE: Return lowest-in-doc if out of bounds
+  elseif a:lnum > line('$')
+    return s:doc_root_hlevel()
   " atx-style headings
   " https://kramdown.gettalong.org/syntax.html#atx-style
   elseif getline(a:lnum) =~# '^#\{1,6\}#\@!'
@@ -139,8 +142,10 @@ function! s:end_of_hsubtree(lnum)
   " GUARD CLAUSE: Return false if no containing header
   if !s:parent_heading_level(a:lnum)
     return 0
-  elseif getline(a:lnum) !~# '\S' && (s:heading_level(a:lnum + 1) || s:next_nonblank_line(a:lnum) == -1)
+  elseif getline(a:lnum) !~# '\S' && s:heading_level(a:lnum + 1)
     return s:heading_level(a:lnum + 1) <= s:parent_heading_level(a:lnum)
+  elseif s:next_nonblank_line(a:lnum) == -1
+    return 1
   end
 endfunction
 
@@ -210,6 +215,19 @@ function! s:parent_heading_level(lnum)
     return 0
   else
     return s:parent_heading_level(a:lnum - 1)
+  endif
+endfunction
+
+" Returns the highest-order (lowest number) heading level in the document
+" (or 0 if no headings found).
+function! s:doc_root_hlevel(...)
+  if a:0 && (a:2 == 1 || a:1 > line('$'))
+    return a:2
+  elseif a:0
+    return s:doc_root_hlevel(a:1 + 1,
+                \ min(filter([a:2, s:heading_level(a:1)], 'v:val > 0')))
+  else
+    return s:doc_root_hlevel(1, 0)
   endif
 endfunction
 
