@@ -115,7 +115,7 @@ _Getting Things Down_ recognizes five TODO keywords:
   * `HELP` (for when I’m stuck and need to study/analyze/ask for help)
   * `WAIT` (requires someone else’s approval/contribution)
 
-You can cycle between select keywords with `<LocalLeader>m` (for ‘mark’) as long as the cursor is on the same line as the task.
+You can cycle between select keywords with `<LocalLeader>c` as long as the cursor is on the same line as the task.
 
 ### Jumping to `TODO`
 
@@ -128,36 +128,11 @@ Configuration
 
 To change the default behavior of _Getting Things Down_, modify the lines below and add them to your `.vimrc`. (For booleans, `0` is falsy; any other number is truthy.)
 
-### `g:gtdown_cycle_states`
-
-Defines the TODO keywords that `<LocalLeader>m` will cycle through.
-
 ```viml
-let g:gtdown_cycle_states = ['TODO', 'WIP ', 'DONE']
-```
-
-### `g:gtdown_default_fold_level`
-
-Sets the default fold level when opening a new Markdown file
-
-```viml
-let g:gtdown_default_fold_level = 2
-```
-
-### `g:gtdown_fold_lists`
-
-Should lists be folded too, or only headings?
-
-```viml
-let g:gtdown_fold_lists = 1
-```
-
-### `g:gtdown_show_progress`
-
-Display progress bar for folded headings/list items?
-
-```viml
-let g:gtdown_show_progress = 1
+let g:gtdown_cycle_states = ['TODO', 'WIP ', 'DONE']   " Defines the TODO keywords that `<LocalLeader>m` will cycle through.
+let g:gtdown_default_fold_level = 2                    " Sets the default fold level when opening a new Markdown file
+let g:gtdown_fold_lists = 1                            " Should lists be folded too, or only headings?
+let g:gtdown_show_progress = 1                         " Display progress bar for folded headings/list items?
 ```
 
 License
