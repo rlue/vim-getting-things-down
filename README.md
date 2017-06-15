@@ -139,8 +139,8 @@ let g:gtdown_cycle_states = ['DONE', 'WIP ', 'WAIT', 'HELP', 'TODO']
 " Sets the default fold level when opening a new Markdown file
 let g:gtdown_default_fold_level = 2
 
-" Should lists be folded too, or only headings?
-let g:gtdown_fold_lists = 1
+" Should multi-line list items collapse too, or only headings?
+let g:gtdown_fold_list_items = 1
 
 " Display progress bar for folded headings/list items?
 let g:gtdown_show_progress = 1

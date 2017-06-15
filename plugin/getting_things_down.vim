@@ -7,8 +7,8 @@ if !exists('g:gtdown_default_fold_level')
   let g:gtdown_default_fold_level = 2
 endif
 
-if !exists('g:gtdown_fold_lists')
-  let g:gtdown_fold_lists = 1
+if !exists('g:gtdown_fold_list_items')
+  let g:gtdown_fold_list_items = 1
 endif
 
 if !exists('g:gtdown_show_progress')
@@ -74,7 +74,7 @@ function! getting_things_down#fold_expr(lnum)
     return '>' . s:this_hlevel
   elseif s:end_of_hsubtree(a:lnum)                         " end of heading
     return s:heading_level(a:lnum + 1)
-  elseif g:gtdown_fold_lists &&
+  elseif g:gtdown_fold_list_items &&
         \ s:list_type(a:lnum) || s:belongs_to_li(a:lnum)    " part of list
     return s:list_level(a:lnum)
   else
