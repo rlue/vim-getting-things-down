@@ -84,7 +84,7 @@ can be collapsed like so:
 |     ...
 ```
 
-Note how the collapsed “Food & Drink” and “Equipment” settings display a progress bar on the right. This is automatically generated according to what portion of the tasks within the fold are marked DONE. Note also that the “HELP Hire a DJ” column does not display a status bar. Since there are no tasks inside of that fold, it reports the number of non-blank lines, instead.
+Note how the collapsed “Food & Drink” and “Equipment” lines display a progress bar on the right. This is automatically generated according to what portion of the tasks within the fold are marked DONE. Note also that the “HELP Hire a DJ” column does not display a status bar. Since there are no tasks inside of that fold, it reports the number of non-blank lines, instead.
 
 As you continue to collapse the folds, the progress bars readjust to reflect the overall progress of all tasks they contain:
 
