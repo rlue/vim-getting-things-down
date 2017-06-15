@@ -109,12 +109,12 @@ endfunction
 " Helper functions -------------------------------------------------------------
 " Returns the <h1>–<h6> level for a given line, or 0 (false) if none.
 function! s:heading_level(lnum)
-  " GUARD CLAUSE: Return false if prev line is not a block boundary
-  if !s:block_boundary(a:lnum - 1)
-    return 0
   " GUARD CLAUSE: Return lowest-in-doc if out of bounds
-  elseif a:lnum > line('$')
+  if a:lnum > line('$')
     return s:doc_root_hlevel()
+  " GUARD CLAUSE: Return false if prev line is not a block boundary
+  elseif !s:block_boundary(a:lnum - 1)
+    return 0
   " atx-style headings
   " https://kramdown.gettalong.org/syntax.html#atx-style
   elseif getline(a:lnum) =~# '^#\{1,6\}#\@!'
