@@ -131,10 +131,17 @@ Configuration
 To change the default behavior of _Getting Things Down_, modify the lines below and add them to your `.vimrc`. (For booleans, `0` is falsy; any other number is truthy.)
 
 ```viml
-let g:gtdown_cycle_states = ['TODO', 'WIP ', 'DONE']   " Defines the TODO keywords that `<LocalLeader>m` will cycle through.
-let g:gtdown_default_fold_level = 2                    " Sets the default fold level when opening a new Markdown file
-let g:gtdown_fold_lists = 1                            " Should lists be folded too, or only headings?
-let g:gtdown_show_progress = 1                         " Display progress bar for folded headings/list items?
+" Defines the TODO keywords that `<LocalLeader>m` will cycle through.
+let g:gtdown_cycle_states = ['DONE', 'WIP ', 'WAIT', 'HELP', 'TODO']
+
+" Sets the default fold level when opening a new Markdown file
+let g:gtdown_default_fold_level = 2
+
+" Should lists be folded too, or only headings?
+let g:gtdown_fold_lists = 1
+
+" Display progress bar for folded headings/list items?
+let g:gtdown_show_progress = 1
 ```
 
 A buffer-local `b:gtdown_show_progress` value will override the global setting. For instance, the following autocommand will enable progress previews _only_ for files named `TODO.md`:

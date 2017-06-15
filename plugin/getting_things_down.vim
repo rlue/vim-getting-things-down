@@ -1,6 +1,6 @@
 " Settings =====================================================================
 if !exists('g:gtdown_cycle_states')
-  let g:gtdown_cycle_states = ['TODO', 'WIP ', 'DONE']
+  let g:gtdown_cycle_states = ['DONE', 'WIP ', 'WAIT', 'HELP', 'TODO']
 endif
 
 if !exists('g:gtdown_default_fold_level')
