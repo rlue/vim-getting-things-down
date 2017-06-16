@@ -68,17 +68,17 @@ endfunction
 " for folding ------------------------------------------------------------------
 " Fold Expression
 function! getting_things_down#fold_expr(lnum)
-  let s:this_hlevel = s:heading_level(a:lnum)
-
-  if s:this_hlevel                                         " start of heading
-    return '>' . s:this_hlevel
+  if !nextnonblank(a:lnum)
+    return s:doc_root_hlevel()
+  elseif s:heading_level(a:lnum)                           " start of heading
+    return '>' . s:heading_level(a:lnum)
   elseif s:end_of_hsubtree(a:lnum)                         " end of heading
     return s:heading_level(a:lnum + 1)
   elseif g:gtdown_fold_list_items &&
-        \ s:list_type(a:lnum) || s:belongs_to_li(a:lnum)    " part of list
+        \ s:list_type(a:lnum) || s:belongs_to_li(a:lnum)   " part of list
     return s:list_level(a:lnum)
   else
-    return s:parent_heading_level(a:lnum)
+    return s:prev_heading_level(a:lnum)
   endif
 endfunction
 
@@ -109,20 +109,14 @@ endfunction
 " Helper functions -------------------------------------------------------------
 " Returns the <h1>–<h6> level for a given line, or 0 (false) if none.
 function! s:heading_level(lnum)
-  " GUARD CLAUSE: Return lowest-in-doc if out of bounds
-  if a:lnum > line('$')
-    return s:doc_root_hlevel()
   " GUARD CLAUSE: Return false if prev line is not a block boundary
-  elseif !s:block_boundary(a:lnum - 1)
+  if !s:block_boundary(a:lnum - 1)
     return 0
-  " atx-style headings
-  " https://kramdown.gettalong.org/syntax.html#atx-style
-  elseif getline(a:lnum) =~# '^#\{1,6\}#\@!'
+  " atx headings (https://kramdown.gettalong.org/syntax.html#atx-style)
+  elseif getline(a:lnum) =~# '^#\{1,6\}\s*\S'
     return strlen(matchstr(getline(a:lnum), '^#\+'))
-  " Setext-style headings
-  " https://kramdown.gettalong.org/syntax.html#setext-style
-  elseif a:lnum < line('$') && getline(a:lnum) =~# '^\s\{0,3\}\S'
-                          \ && getline(a:lnum + 1) =~# '\v^(\=+|-+)$'
+  " Setext headings (https://kramdown.gettalong.org/syntax.html#setext-style)
+  elseif getline(a:lnum + 1) =~# '\v^(\=+|-+)$' && getline(a:lnum) =~# '^\s\{0,3\}\S'
     return getline(a:lnum + 1) =~# '^=' ? 1 : 2
   endif
 endfunction
@@ -139,54 +133,41 @@ endfunction
 " Returns true if a given line is blank and terminates its heading subtree.
 " (I.e., it is followed by an <h1>–<h6> header of higher rank than its own.)
 function! s:end_of_hsubtree(lnum)
-  " GUARD CLAUSE: Return false if no containing header
-  if !s:parent_heading_level(a:lnum)
-    return 0
-  elseif getline(a:lnum) !~# '\S' && s:heading_level(a:lnum + 1)
-    return s:heading_level(a:lnum + 1) <= s:parent_heading_level(a:lnum)
-  elseif s:next_nonblank_line(a:lnum) == -1
-    return 1
+  if s:heading_level(a:lnum + 1) && s:prev_heading_level(a:lnum)
+    return s:heading_level(a:lnum + 1) <= s:prev_heading_level(a:lnum)
   end
-endfunction
-
-function! s:next_nonblank_line(lnum)
-  " GUARD CLAUSE: Return this line if not blank
-  if getline(a:lnum) =~# '\S'
-    return a:lnum
-  else
-    return a:lnum > line('$') ? -1 : s:next_nonblank_line(a:lnum + 1)
-  endif
 endfunction
 
 " Returns the line number that starts the containing list item of a given line.
 function! s:belongs_to_li(lnum, ...)
   " GUARD CLAUSE: Return -1 if block boundary reached
-  if s:block_boundary(a:lnum, (a:0 && get(a:1, 'size') == 0 && get(a:1, 'type') !=# 'marker'))
+  if a:0 && s:block_boundary(a:lnum, (get(a:1, 'size') == 0 &&
+              \                       get(a:1, 'type') ==# 'text'))
     return -1
   " Primitive case
-  elseif a:0 && s:list_type(a:lnum) && get(s:indent_size(a:lnum, 1), get(a:1, 'type')) <= get(a:1, 'size')
+  elseif a:0 && s:list_type(a:lnum) &&
+              \ get(s:indent_size(a:lnum, 1), get(a:1, 'type')) <= get(a:1, 'size')
     return a:lnum
   " Subsequent calls
   elseif a:0
-    let l:indent = s:new_paragraph(a:lnum) &&
-          \ s:indent_size(a:lnum) <= get(a:1, 'size') ?
-          \ { 'type': 'text',
-          \   'size': min([get(a:1, 'size'), s:indent_size(a:lnum)]) } :
-          \ a:1
+    return s:belongs_to_li(a:lnum - 1,
+                \          s:new_paragraph(a:lnum) &&
+                \            s:indent_size(a:lnum) <= get(a:1, 'size') ?
+                \            { 'type': 'text',
+                \              'size': min([get(a:1, 'size'),
+                \                           s:indent_size(a:lnum)]) } :
+                \            a:1)
   " First call
   else
-    let l:ref_line = s:next_nonblank_line(a:lnum)
-    let l:indent =
-        \ { 'type': ((getline(a:lnum) =~# '\S' || !s:list_type(l:ref_line)) ? 'text' : 'marker'),
-          \ 'size': ((s:list_type(l:ref_line) || s:new_paragraph(l:ref_line)) ? s:indent_size(l:ref_line) : 99) }
-
-    " GUARD CLAUSE: Return -1 if this line is a heading
-    if s:heading_level(l:ref_line)
-      return -1
-    endif
+    let l:ref_line = nextnonblank(a:lnum)
+    return s:belongs_to_li(a:lnum - 1, 
+                \          { 'type': ((l:ref_line == a:lnum ||
+                \                      !s:list_type(l:ref_line)) ?
+                \                        'text' : 'marker'),
+                \            'size': ((s:list_type(l:ref_line) ||
+                \                      s:new_paragraph(l:ref_line)) ?
+                \                        s:indent_size(l:ref_line) : 99) })
   endif
-
-  return s:belongs_to_li(a:lnum - 1, l:indent)
 endfunction
 
 " Is a given line a block boundary?
@@ -194,52 +175,49 @@ endfunction
 " Accepts an optional {cond} argument to help disambiguate, e.g.,
 " new paragraphs within list items and new paragraphs at the end of a list.
 function! s:block_boundary(lnum, ...)
-  if a:lnum < 1 || getline(a:lnum) =~# '\(^\^$\|^\s*{:.\+}\)' ||
-        \ (s:new_paragraph(a:lnum + 1) && (a:0 ? a:1 : 1))
-    return 1
-  endif
+  return a:lnum < 1 || (s:new_paragraph(a:lnum + 1) && (a:0 ? a:1 : 1)) ||
+        \ getline(a:lnum) =~# '\(^\^$\|^\s*{:.\+}\)'
 endfunction
 
 " Is a given line non-blank and preceded by a blank one?
 function! s:new_paragraph(lnum)
-  if getline(a:lnum - 1) !~# '\S' && getline(a:lnum) =~# '\S'
-    return 1
-  endif
+  return nextnonblank(a:lnum - 1) == a:lnum
 endfunction
 
 " Returns the level of the nearest preceding heading
-function! s:parent_heading_level(lnum)
+function! s:prev_heading_level(lnum)
   if s:heading_level(a:lnum)
     return s:heading_level(a:lnum)
   elseif a:lnum < 1
     return 0
   else
-    return s:parent_heading_level(a:lnum - 1)
+    return s:prev_heading_level(a:lnum - 1)
   endif
 endfunction
 
 " Returns the highest-order (lowest number) heading level in the document
 " (or 0 if no headings found).
 function! s:doc_root_hlevel(...)
-  if a:0 && (a:2 == 1 || a:1 > line('$'))
-    return a:2
-  elseif a:0
+  if a:0 && a:1 <= line('$') && a:2 != 1
     return s:doc_root_hlevel(a:1 + 1,
                 \ min(filter([a:2, s:heading_level(a:1)], 'v:val > 0')))
+  elseif a:0
+    return a:2
   else
     return s:doc_root_hlevel(1, 0)
   endif
 endfunction
 
 " Set an explicit fold level for lines containing list items
+" CAUTION: guard clause removed for performance issues; do not pass invalid input
 function! s:list_level(lnum)
   " GUARD CLAUSE: Return false if line does not contain a list item
-  if !(s:list_type(a:lnum) || s:belongs_to_li(a:lnum))
-    return 0
-  else
-    let l:level = s:parent_heading_level(a:lnum) + s:count_li_ancestors(a:lnum)
+  " if !(s:list_type(a:lnum) || s:belongs_to_li(a:lnum))
+    " return 0
+  " else
+    let l:level = s:prev_heading_level(a:lnum) + s:count_li_ancestors(a:lnum)
     return s:belongs_to_li(a:lnum + 1) == a:lnum ? '>' . (l:level + 1) : l:level
-  endif
+  " endif
 endfunction
 
 " Counts the nesting level of a given list item.
