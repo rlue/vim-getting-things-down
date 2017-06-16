@@ -136,7 +136,7 @@ To change the default behavior of _Getting Things Down_, modify the lines below 
 " Defines the TODO keywords that `<LocalLeader>m` will cycle through.
 let g:gtdown_cycle_states = ['DONE', 'WIP ', 'WAIT', 'HELP', 'TODO']
 
-" Sets the default fold level when opening a new Markdown file
+" Default fold level for new Markdown buffers (see `:h 'foldlevel'`).
 let g:gtdown_default_fold_level = 2
 
 " Should multi-line list items collapse too, or only headings?
