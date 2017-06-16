@@ -56,13 +56,28 @@ endfunction
 
 function! getting_things_down#cycle_status()
   let l:curpos = getcurpos()
+
   let l:status = matchstr(getline('.'), '\v(^#{1,6}\s*|^\s*([\*\+\-]|\d\+\.)\s+)@<=(' . join(g:gtdown_cycle_states, '|') .')')
-  for i in range(0, len(g:gtdown_cycle_states) - 1)
-    if l:status ==# get(g:gtdown_cycle_states, i)
-      execute line('.') . 'substitute/' . get(g:gtdown_cycle_states, i) . '/' . get(g:gtdown_cycle_states, ((i + 1) % len(g:gtdown_cycle_states)))
-    endif
-  endfor
+
+  if exists('b:gtdown_cycle_timeout') &&
+              \ get(b:gtdown_cycle_timeout, 'line') == get(l:curpos, 1) &&
+              \ (localtime() - get(b:gtdown_cycle_timeout, 'time')) < 10
+    execute line('.') . 'substitute/' . l:status . '/' .
+                \ s:gtdown_next_status(l:status)
+  else
+    let b:gtdown_cycle_timeout = { 'line': line('.'), 'time': localtime() }
+    execute line('.') . 'substitute/' . l:status . '/' .
+                \ (l:status !=# 'DONE' ? 'DONE' :
+                \ s:gtdown_next_status(l:status))
+  endif
+
   call setpos('.', l:curpos)
+endfunction
+
+function! s:gtdown_next_status(status)
+  return get(g:gtdown_cycle_states,
+              \ ((index(g:gtdown_cycle_states, a:status) + 1) %
+              \  len(g:gtdown_cycle_states)))
 endfunction
 
 " for folding ------------------------------------------------------------------
