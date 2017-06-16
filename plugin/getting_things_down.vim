@@ -61,7 +61,7 @@ function! getting_things_down#cycle_status()
 
   if exists('b:gtdown_cycle_timeout') &&
               \ get(b:gtdown_cycle_timeout, 'line') == get(l:curpos, 1) &&
-              \ (localtime() - get(b:gtdown_cycle_timeout, 'time')) < 10
+              \ (localtime() - get(b:gtdown_cycle_timeout, 'time')) < 5
     execute line('.') . 'substitute/' . l:status . '/' .
                 \ s:gtdown_next_status(l:status)
   else
