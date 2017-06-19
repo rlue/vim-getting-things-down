@@ -1,6 +1,8 @@
 " Syntax settings ==============================================================
 " (for TODO keyword highlighting)
 
+syntax case match
+
 " Syntax groups ending in ‘N’ (as in `nextgroup`) appear after list items
 " ------------------------------------------------------------------------------
 syntax match markdownListMarker "\%(\t\| \{0,4\}\)[-*+]\%(\s\+\S\)\@=" contained nextgroup=markdownTodoDoneN,markdownTodoReadyN,markdownTodoWaitingN skipwhite
@@ -23,9 +25,9 @@ syntax region markdownH4 matchgroup=markdownHeadingDelimiter start="#####\@!"   
 syntax region markdownH5 matchgroup=markdownHeadingDelimiter start="######\@!"  end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink,markdownTodoDoneC,markdownTodoReadyC,markdownTodoWaitingC contained
 syntax region markdownH6 matchgroup=markdownHeadingDelimiter start="#######\@!" end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink,markdownTodoDoneC,markdownTodoReadyC,markdownTodoWaitingC contained
 
-syntax match markdownTodoDoneC /\C\(^#\{1,6\}\s*\)\@<=DONE\s\@=/ contained
-syntax match markdownTodoReadyC /\C\(^#\{1,6\}\s*\)\@<=\(TODO\|WIP\)\s\@=/ contained
-syntax match markdownTodoWaitingC /\C\(^#\{1,6\}\s*\)\@<=\(HELP\|WAIT\)\s\@=/ contained
+syntax match markdownTodoDoneC /\(^#\{1,6\}\s*\)\@<=DONE\s\@=/ contained
+syntax match markdownTodoReadyC /\(^#\{1,6\}\s*\)\@<=\(TODO\|WIP\)\s\@=/ contained
+syntax match markdownTodoWaitingC /\(^#\{1,6\}\s*\)\@<=\(HELP\|WAIT\)\s\@=/ contained
 
 highlight link markdownTodoDoneC DiffAdd
 highlight link markdownTodoReadyC DiffChange
