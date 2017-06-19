@@ -79,9 +79,9 @@ Getting Things Down recognizes five TODO keywords:
 
 	* TODO
 	* DONE
-	* WIP
-	* WAIT
-	* HELP
+	* WIP  (work-in-progress)
+	* WAIT (pending external factors)
+	* HELP (requires further analysis/planning/assistance)
 
 To create a task, place a TODO keyword at the start of a list item or
 hashmark-style (ATX) heading. TODO tasks are used for overall progress
