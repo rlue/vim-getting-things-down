@@ -61,7 +61,7 @@ function! getting_things_down#cycle_status()
 
   " GUARD CLAUSE: fail silently if not on TODO task
   if l:status ==# ''
-    unlet b:gtdown_cycle_timeout
+    if exists('b:gtdown_cycle_timeout') | unlet b:gtdown_cycle_timeout | endif
     return 0
   " Repeat invocation AND timeout alive
   elseif exists('b:gtdown_cycle_timeout') &&
