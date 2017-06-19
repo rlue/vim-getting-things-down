@@ -168,24 +168,22 @@ Use `:let` |maplocalleader| to set your local leader key.
 OPTIONS						*getting-things-down-options*
 
 						*g:gtdown_cycle_states*
-TODO cycle	list (default ['DONE', 'WIP', 'WAIT', 'HELP', 'TODO'])
-states
+TODO cycle states	list (default ['DONE', 'WIP',
+				       'WAIT', 'HELP', 'TODO'])
 	Defines which TODO keywords are used (and in what order) for the
 	|getting_things_down#cycle_status()| function.
 
 						*g:gtdown_default_fold_level*
-Default fold	number (default 2)
-level
+Default fold level	number (default 2)
 	Sets the default 'foldlevel' when opening a new Markdown buffer (or
 	refreshing folds with |zX|).
 
 						*g:gtdown_fold_list_items*
-Fold list	boolean (default on)
-items?
+Fold list items?	boolean (default on)
 	Defines whether to fold on multi-line list items. Set to 0 to disable.
 
 						*g:gtdown_show_progress*
-Show progress?	boolean (default on)
+Show progress?		boolean (default on)
 	Defines whether to display progress bars in foldtext (see
 	|getting-things-down-progress| for details). Set to 0 to disable.
 
