@@ -1,0 +1,201 @@
+*getting-things-down.txt*	Organization and task management in Markdown
+
+==============================================================================
+INTRODUCTION					*getting-things-down*
+
+Getting Things Down is a productivity tool for creating outlines and to-do
+lists in Markdown.
+
+Usage & Features ~
+
+    * Automatic folding..........................|getting-things-down-folding|
+    * TODO tasks....................................|getting-things-down-todo|
+    * Progress tracking.........................|getting-things-down-progress|
+    * Jump to TODO file.........................|getting-things-down-todofile|
+
+Technical Reference ~
+
+    * Mappings..................................|getting-things-down-mappings|
+    * Options....................................|getting-things-down-options|
+    * Functions................................|getting-things-down-functions|
+
+==============================================================================
+FOLDING						*getting-things-down-folding*
+
+Vim’s built-in text |folding| allows you to collapse portions of your
+document for clearer organization and easier navigation. 
+
+Structure your document using headings and lists, and Getting Things Down will
+automatically generate the fold structure, as shown below:
+>
+	-     Jake’s Bar Mitzvah
+	|     ================================================================
+	|     
+	|-    ## Supplies
+	||    
+	||-   ### Food & Drink
+	|||   
+	|||     * DONE catering (Szechwan Palace)
+	|||     * TODO buy grape juice
+	|||   
+	||-   ### Equipment
+	|||   
+	|||-    * WAIT folding chairs & tables
+	||||
+	||||      may be provided by venue?
+	||||
+	|||     * DONE PA system
+	||    
+	|-    ## People
+	||    
+	||      * WIP  practice group dance routine
+	||-     * HELP hire a DJ
+	||| 
+	|||       NO rap music
+	||    
+	|-    ## Resources
+	||    
+	||      * http://chabad.org/library/article_cdo/aid/136670/jewish
+	||      * http://szechwanpalace.com
+	|
+	-     Jewish Movie Night
+	|     ================================================================
+	|     ...
+<
+Note that groups of list items are not folded together; rather, separate folds
+are created for individual, multi-line list items. Getting Things Down follows
+kramdown syntax (https://kramdown.gettalong.org/syntax.html) for headings and
+list items. Use the |foldcolumn| option to see how your document structure is
+being parsed: >
+
+	:set foldcolumn=5
+
+If the fold structure appears incorrect or out-of-sync, try |zX| to refresh.
+
+==============================================================================
+TODO TASKS					*getting-things-down-todo*
+
+Getting Things Down recognizes five TODO keywords:
+
+	* TODO
+	* DONE
+	* WIP
+	* WAIT
+	* HELP
+
+To create a task, place a TODO keyword at the start of a list item or
+hashmark-style (ATX) heading. TODO tasks are used for overall progress
+tracking (see next section for details).
+
+Use <LocalLeader>c (|getting_things_down#cycle_status()|) to mark a task DONE
+or cycle through other TODO keywords.
+
+TODO keywords are given special syntax highlighting, and must be written in
+uppercase.
+
+==============================================================================
+PROGRESS TRACKING				*getting-things-down-progress*
+
+If you fold a portion of the document containing TODO tasks, the resulting
+'foldtext' will include a progress bar indicating how many of the enclosed
+tasks have been completed.
+
+For instance, the following section
+>
+	||-   ### Food & Drink
+	|||   
+	|||     * DONE catering (Szechwan Palace)
+	|||     * TODO buy grape juice
+	|||   
+<
+will collapse into this line: 
+>
+	||+   --- # Food & Drink ---------------- 50% [##########..........] -
+<
+To disable this feature, set the |g:gtdown_show_progress| option.
+
+==============================================================================
+JUMP TO TODO FILE				*getting-things-down-todofile*
+
+Use <LocalLeader><LocalLeader> to jump between the current file and its
+nearest TODO file (|getting_things_down#show_todo()|).
+
+Getting Things Down finds TODO files by walking up the directory tree and
+recursively searching each parent node for a file called “TODO.*”. Thus, for the
+project structure below,
+>
+	aviary
+	├── Gemfile
+	├── README.md
+	├── _whiteboard
+	│   ├── TODO.md
+	│   └── notes.md
+	└── lib
+	    ├── aviary
+	    │   ├── nest.rb
+	    │   └── bath.rb
+	    └── aviary.rb
+<
+<LocalLeader><LocalLeader> will take you to _whiteboard/TODO.md whether you
+are editing lib/aviary/nest.rb, the Gemfile, or any other file in the project.
+
+Note: If the current file does not have a nearby TODO file, the search
+function may get stuck globbing larger and larger portions of your filesystem,
+blocking further activity in the process. To mitigate this problem, it will
+stop just two levels shy of your |$HOME| directory, and is disabled altogether
+for files outside of ~/.
+
+==============================================================================
+MAPPINGS					*getting-things-down-mappings*
+
+					*getting_things_down#show_todo()*
+<LocalLeader>	Switch to (or back from) the nearest TODO file.
+<LocalLeader>	See |getting-things-down-todofile| for implementation details.
+
+					*getting_things_down#cycle_status()*
+<LocalLeader>c	Cycle TODO status.
+		Changes the TODO keyword of the current line, cycling through
+		keywords as listed above, starting with DONE. See
+		|getting-things-down-todo| for details.
+		
+		You may customize the set of active TODO keywords (or the
+		order in which they appear) with the |g:gtdown_cycle_states|
+		option.
+
+Use `:let` |maplocalleader| to set your local leader key.
+
+==============================================================================
+OPTIONS						*getting-things-down-options*
+
+						*g:gtdown_cycle_states*
+TODO cycle	list (default ['DONE', 'WIP', 'WAIT', 'HELP', 'TODO'])
+states
+	Defines which TODO keywords are used (and in what order) for the
+	|getting_things_down#cycle_status()| function.
+
+						*g:gtdown_default_fold_level*
+Default fold	number (default 2)
+level
+	Sets the default 'foldlevel' when opening a new Markdown buffer (or
+	refreshing folds with |zX|).
+
+						*g:gtdown_fold_list_items*
+Fold list	boolean (default on)
+items?
+	Defines whether to fold on multi-line list items. Set to 0 to disable.
+
+						*g:gtdown_show_progress*
+Show progress?	boolean (default on)
+	Defines whether to display progress bars in foldtext (see
+	|getting-things-down-progress| for details). Set to 0 to disable.
+
+==============================================================================
+ABOUT						*getting-things-down-about*
+
+This project is hosted on GitHub.
+	https://github.com/rlue/vim-getting-things-down  
+ 
+						*getting-things-down-license*
+Copyright © Ryan Lue. Distributed under the MIT License.
+==============================================================================
+ vim:tw=78:ts=8:et:ft=help:norl:

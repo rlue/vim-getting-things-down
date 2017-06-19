@@ -15,12 +15,13 @@ There are lots of vim plugin managers out there. I like [vim-plug](https://githu
 Usage
 -----
 
-### Folding & Highlighting
-
 Most of _Getting Things Down’s_ functionality comes automatically in the form of folding and syntax highlighting. If you can write documents in Markdown, you’re already 90% of the way there.
 
+### Folding
+
 To take full advantage of its capabilities, simply make thoughtful use of headings when structuring your document, and pepper it with TODO annotations in list items and/or headings. 
-Thus, the document below
+
+For instance, a document like the one below
 
 ```markdown
 -     Jake’s Bar Mitzvah
@@ -101,6 +102,8 @@ As you continue to collapse the folds, the progress bars are recalculated to ref
 |     ...
 ```
 
+_Getting Things Down_ follows [kramdown syntax][kram] definitions for headings and list items.
+
 If you’re not familiar with folding, check out the help docs:
 
 ```viml
@@ -117,7 +120,7 @@ _Getting Things Down_ recognizes five TODO keywords:
   * `HELP` (for when I’m stuck and need to study/analyze/ask for help)
   * `WAIT` (requires someone else’s approval/contribution)
 
-You can cycle between select keywords with `<LocalLeader>c` as long as the cursor is on the same line as the task.
+You can cycle between select keywords with `<LocalLeader>c`. The cursor does not have to be on the TODO keyword itself, only on the same line.
 
 ### Jumping to `TODO`
 
@@ -176,3 +179,5 @@ License
 The MIT License (MIT)
 
 Copyright © 2017 Ryan Lue
+
+[kram]: https://kramdown.gettalong.org/syntax.html
