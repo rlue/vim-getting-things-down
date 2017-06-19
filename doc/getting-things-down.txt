@@ -197,5 +197,5 @@ This project is hosted on GitHub.
  
 						*getting-things-down-license*
 Copyright © Ryan Lue. Distributed under the MIT License.
-==============================================================================
+
  vim:tw=78:ts=8:et:ft=help:norl:
