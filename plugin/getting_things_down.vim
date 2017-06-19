@@ -59,11 +59,17 @@ function! getting_things_down#cycle_status()
 
   let l:status = matchstr(getline('.'), '\v(^#{1,6}\s*|^\s*([\*\+\-]|\d\+\.)\s+)@<=(' . join(g:gtdown_cycle_states, '|') .')')
 
-  if exists('b:gtdown_cycle_timeout') &&
+  " GUARD CLAUSE: fail silently if not on TODO task
+  if l:status ==# ''
+    unlet b:gtdown_cycle_timeout
+    return 0
+  " Repeat invocation AND timeout alive
+  elseif exists('b:gtdown_cycle_timeout') &&
               \ get(b:gtdown_cycle_timeout, 'line') == get(l:curpos, 1) &&
               \ (localtime() - get(b:gtdown_cycle_timeout, 'time')) < 5
     execute line('.') . 'substitute/' . l:status . '/' .
                 \ s:gtdown_next_status(l:status)
+  " First invocation OR timeout expired
   else
     let b:gtdown_cycle_timeout = { 'line': line('.'), 'time': localtime() }
     execute line('.') . 'substitute/' . l:status . '/' .
