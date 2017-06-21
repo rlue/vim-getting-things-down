@@ -120,7 +120,7 @@ _Getting Things Down_ recognizes five TODO keywords:
   * `HELP` (for when I’m stuck and need to study/analyze/ask for help)
   * `WAIT` (requires someone else’s approval/contribution)
 
-You can cycle between select keywords with `<LocalLeader>c`. The cursor does not have to be on the TODO keyword itself, only on the same line.
+TODO keywords must be placed at the start of list items and hashmark-style (_i.e.,_ ATX) headings. You can toggle the presence of a TODO keyword with `<LocalLeader>t`, or cycle between select keywords with `<LocalLeader>c`. The cursor does not have to be on the TODO keyword itself, only on the same line.
 
 ### Jumping to `TODO`
 
