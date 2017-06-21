@@ -64,7 +64,7 @@ function! getting_things_down#toggle_task()
   if l:is_task
     execute line('.') . 'substitute/' . l:status . '\s\+//'
   else
-    execute 'substitute/\v(^#{1,6}\s*|^\s*([\*\+\-]|\d\+\.)\s+)@<=(\S)@=/TODO /'
+    execute 'substitute/\v(^#{1,6}\s*|^\s*([\*\+\-]|\d\+\.)\s+)@<=/TODO /'
   endif
 
   call setpos('.', l:curpos)
