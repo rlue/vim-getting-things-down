@@ -33,10 +33,10 @@ endfunction
 function! getting_things_down#cycle_status()
   let l:curpos = getcurpos()
 
-  let l:status = matchstr(getline('.'), '\v(^#{1,6}\s*|^\s*([\*\+\-]|\d\+\.)\s+)@<=(' . join(g:gtdown_cycle_states, '|') .')')
+  let l:status = matchstr(getline('.'), '\v(^#{1,6}\s*|^\s*([\*\+\-]|\d\+\.)\s+)@<=(' . join(g:gtdown_cycle_states, '|') .')\s@=')
 
   " GUARD CLAUSE: fail silently if not on TODO task
-  if l:status ==# ''
+  if empty(l:status)
     if exists('b:gtdown_cycle_timeout') | unlet b:gtdown_cycle_timeout | endif
     return 0
   " Repeat invocation AND timeout alive
@@ -51,6 +51,20 @@ function! getting_things_down#cycle_status()
     execute line('.') . 'substitute/' . l:status . '/' .
                 \ (l:status !=# 'DONE' ? 'DONE' :
                 \ s:gtdown_next_status(l:status))
+  endif
+
+  call setpos('.', l:curpos)
+endfunction
+
+function! getting_things_down#toggle_task()
+  let l:curpos = getcurpos()
+  let l:status = matchstr(getline('.'), '\v(^#{1,6}\s*|^\s*([\*\+\-]|\d\+\.)\s+)@<=(' . join(g:gtdown_cycle_states, '|') .')\s@=')
+  let l:is_task = !empty(l:status)
+
+  if l:is_task
+    execute line('.') . 'substitute/' . l:status . '\s\+//'
+  else
+    execute 'substitute/\v(^#{1,6}\s*|^\s*([\*\+\-]|\d\+\.)\s+)@<=(\S)@=/TODO /'
   endif
 
   call setpos('.', l:curpos)

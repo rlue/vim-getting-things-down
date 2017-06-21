@@ -90,6 +90,9 @@ tracking (see next section for details).
 Use <LocalLeader>c (|getting_things_down#cycle_status()|) to mark a task DONE
 or cycle through other TODO keywords.
 
+<LocalLeader>t (|getting_things_down#toggle_task()|) adds or removes a TODO
+keyword from the start of the line, as appropriate.
+
 TODO keywords are given special syntax highlighting, and must be written in
 uppercase.
 
@@ -162,6 +165,11 @@ MAPPINGS					*getting-things-down-mappings*
 		order in which they appear) with the |g:gtdown_cycle_states|
 		option.
 
+					*getting_things_down#toggle_task()*
+<LocalLeader>t	Toggle TODO task.
+		Remove the TODO keyword from the current line, or add its if
+		none exists. See |getting-things-down-todo| for details.
+		
 Use `:let` |maplocalleader| to set your local leader key.
 
 ==============================================================================

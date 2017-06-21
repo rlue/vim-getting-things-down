@@ -28,3 +28,7 @@ nnoremap <LocalLeader><LocalLeader> :call getting_things_down#show_todo()<CR>
 
 " Cycle through TODO keywords
 nnoremap <silent> <LocalLeader>c :call getting_things_down#cycle_status()<CR>
+
+" Toggle TODO tasks
+nnoremap <silent> <LocalLeader>t :call getting_things_down#toggle_task()<CR>
+vnoremap <silent> <LocalLeader>t :call getting_things_down#toggle_task()<CR>
