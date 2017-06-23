@@ -175,7 +175,7 @@ nnoremap <silent> <LocalLeader>t :call getting_things_down#toggle_task()<CR>
 vnoremap <silent> <LocalLeader>t :call getting_things_down#toggle_task()<CR>
 ```
 
-I use `<Leader><Leader>`, `<Leader>c`, and `<Leader>t, but it’d probably clobber someone else’s settings if those were the default.
+I use `<Leader><Leader>`, `<Leader>c`, and `<Leader>t`, but it’d probably clobber someone else’s settings if those were the default.
 
 License
 -------
