@@ -72,7 +72,7 @@ endfunction
 
 " for folding ------------------------------------------------------------------
 function! getting_things_down#fold_expr(lnum)
-  if !nextnonblank(a:lnum)
+  if !nextnonblank(a:lnum)                                 " trailing blank line
     return s:doc_root_hlevel()
   elseif s:heading_level(a:lnum)                           " start of heading
     return '>' . s:heading_level(a:lnum)
@@ -90,11 +90,11 @@ function! getting_things_down#fold_text()
   if s:heading_level(v:foldstart)
     let s:heading = '# ' . substitute(getline(v:foldstart), '^#\+ ', '', '')
     let s:indent  = substitute(repeat('--', v:foldlevel - 1), '-$', ' ', '')
-    let s:head_limit = 76 - s:indent
+    let s:head_limit = 76 - len(s:indent)
   else
     let s:heading = substitute(getline(v:foldstart), '^\s\+', '', '')
     let s:indent  = substitute(repeat('-', matchend(getline(v:foldstart), '^\s\+')), '-$', ' ', '')
-    let s:head_limit = 78
+    let s:head_limit = 78 - len(s:indent)
   endif
 
   let s:fold_stats = s:compute_fold_stats(v:foldstart, v:foldend)
