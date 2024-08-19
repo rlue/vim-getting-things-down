@@ -1,4 +1,4 @@
-Getting Things Down
+This project suffers from severe performance issues and has been abandoned.
 ===================
 
 ![](https://raw.githubusercontent.com/rlue/i/master/vim-getting-things-down/demo.gif)
